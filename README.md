@@ -126,3 +126,47 @@ Finally, the script visualizes:
 The original input frame
 
 All generated frames in a single row using matplotlib
+
+## Future Improvements
+
+Planned / potential improvements on the model side:
+
+- **Richer pose conditioning**
+  - Replace the raw 4×4 matrix flattening with more structured pose encodings (e.g., SE(3) / Lie algebra, quaternions + translation).
+  - Add a dedicated pose encoder and fuse pose features with cross-attention instead of simple MLP + addition.
+
+- **Multi-view conditioning**
+  - Condition the U-Net on multiple reference views instead of a single image.
+  - Experiment with attention over a set of reference images + poses to better handle occlusions and ambiguous viewpoints.
+
+- **3D-aware representations**
+  - Incorporate an intermediate 3D representation (e.g., implicit field / NeRF-style features) and render back to 2D.
+  - Explore 3D convolutions or transformers over a learned 3D feature grid to enforce cross-view consistency.
+
+- **Improved diffusion training and sampling**
+  - Use alternative beta schedules (e.g., cosine) and advanced samplers (DDIM, DPM-Solver, etc.) for faster and higher-quality sampling.
+  - Switch from pure noise prediction (ε) to `v`-prediction or direct `x₀` prediction and compare stability/quality.
+  - Add classifier-free guidance on pose or object identity to better control the generated view.
+
+- **Higher-resolution generation**
+  - Scale the U-Net to 128×128 or 256×256 using:
+    - Multi-scale / hierarchical U-Nets, or
+    - A separate super-resolution module trained on top of the 64×64 outputs.
+  - Introduce skip connections across resolutions for sharper details.
+
+- **Better loss functions**
+  - Combine MSE with perceptual losses (e.g., LPIPS) for sharper and more realistic images.
+  - Optionally add a lightweight adversarial head (GAN-style discriminator) for improved texture realism while keeping diffusion as the main training signal.
+
+- **View-consistency regularization**
+  - Add multi-view consistency losses: enforce that different generated views of the same object are geometrically compatible.
+  - Encourage consistent features across views by using cycle-consistency (e.g., generate A→B→A and penalize deviations).
+
+- **Category and domain generalization**
+  - Extend to more ShapeNet categories (airplanes, chairs, etc.) and train a single model conditioned on category ID.
+  - Evaluate how well a model trained on one category transfers to others and explore shared vs category-specific layers.
+
+- **Quantitative evaluation pipeline**
+  - Add automatic metrics on held-out views (PSNR, SSIM, LPIPS) and track them during training.
+  - Optionally compute FID/KID on rendered views to compare against other novel view synthesis approaches.
+
