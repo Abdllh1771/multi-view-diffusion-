@@ -126,6 +126,8 @@ Finally, the script visualizes:
 The original input frame
 
 All generated frames in a single row using matplotlib
+```
+
 
 ## Future Improvements
 
@@ -169,4 +171,3 @@ Planned / potential improvements on the model side:
 - **Quantitative evaluation pipeline**
   - Add automatic metrics on held-out views (PSNR, SSIM, LPIPS) and track them during training.
   - Optionally compute FID/KID on rendered views to compare against other novel view synthesis approaches.
-
